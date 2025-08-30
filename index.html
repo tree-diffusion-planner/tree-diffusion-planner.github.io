@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="description"
+          content="The .">
+    <meta name="keywords" content="Tree-Guided Diffusion Planner">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Tree-Guided Diffusion Planner</title>
+
+    <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro"
+          rel="stylesheet">
+
+    <link rel="stylesheet" href="./static/css/bulma.min.css">
+    <link rel="stylesheet" href="./static/css/bulma-carousel.min.css">
+    <link rel="stylesheet" href="./static/css/bulma-slider.min.css">
+    <link rel="stylesheet" href="./static/css/fontawesome.all.min.css">
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+    <link rel="stylesheet" href="./static/css/index.css">
+    <link rel="icon" href="./static/images/favicon.svg">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script defer src="./static/js/fontawesome.all.min.js"></script>
+    <script src="./static/js/bulma-carousel.min.js"></script>
+    <script src="./static/js/bulma-slider.min.js"></script>
+    <script src="./static/js/index.js"></script>
+    <!-- Load MathJax -->
+    <script type="text/javascript" async
+        src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+    </script>
+    
+    <!-- MathJax Configuration -->
+    <script type="text/javascript">
+        MathJax = {
+            tex: {
+                inlineMath: [['$', '$']],
+                displayMath: [['$$', '$$']],
+            }
+        };
+    </script>
+
+</head>
+<body>
+
+<!--<nav class="navbar" role="navigation" aria-label="main navigation">-->
+<!--    <div class="navbar-brand">-->
+<!--        <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false">-->
+<!--            <span aria-hidden="true"></span>-->
+<!--            <span aria-hidden="true"></span>-->
+<!--            <span aria-hidden="true"></span>-->
+<!--        </a>-->
+<!--    </div>-->
+<!--</nav>-->
+
+<section class="hero is-dark">
+    <div class="hero-body">
+      <div class="container is-max-desktop" style="max-width: 1200px;">
+        <div class="columns is-centered">
+          <div class="column has-text-centered">
+                    <h1 class="title is-3 publication-title">
+                        Tree-Guided Diffusion Planner
+                    </h1>
+                      <div class="is-size-5 publication-authors">
+                        <span class="author-block">
+                            <span><a href="https://yeonsumia.github.io/">Hyeonseong Jeon</a><sup>1</sup>, </span>
+                            <span><a href="https://cheolhong0916.github.io/">Cheolhong Min</a><sup>1</sup>, </span>
+                            <span><a href="https://jaesik.info/">Jaesik Park</a><sup>1,2</sup> </span>
+                        </span>
+                    </div>
+                    <div class="is-size-6 publication-authors">
+                        <span class="author-block">
+                            <sup>1</sup>Department of Computer Science & Engineering, <sup>2</sup>Interdisciplinary Program of AI<br>Seoul National University
+                        </span>
+                    </div>
+                    <div class="column has-text-centered">
+                        <span class="publication-links">
+                            <span class="link-block"><a target="_blank" href="." class="external-link button is-normal is-rounded is-light"><span class="icon"><svg class="svg-inline--fa fa-file fa-w-12" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="file" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512" data-fa-i2svg=""><path fill="currentColor" d="M224 136V0H24C10.7 0 0 10.7 0 24v464c0 13.3 10.7 24 24 24h336c13.3 0 24-10.7 24-24V160H248c-13.2 0-24-10.8-24-24zm160-14.1v6.1H256V0h6.1c6.4 0 12.5 2.5 17 7l97.9 98c4.5 4.5 7 10.6 7 16.9z"></path></svg></span><span>Paper</span></a></span>
+                            <span class="link-block"><a target="_blank" href="." class="external-link button is-normal is-rounded is-light"><span class="icon"><svg class="svg-inline--fa fa-github fa-w-16" aria-hidden="true" focusable="false" data-prefix="fab" data-icon="github" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512" data-fa-i2svg=""><path fill="currentColor" d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"></path></svg></span><span>Code (coming soon)</span></a></span>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<br>
+
+<section class="hero teaser">
+    <div class="container is-max-desktop" style="max-width: 1200px;">
+        <div class="hero">
+            <br>
+            <h2 class="subtitle">
+                <strong>Tree-guided Diffusion Planner (TDP)</strong> <img src="https://emojicdn.elk.sh/🌴"  style="height: 1em;"  /> is a zero-shot test-time planning framework that balances exploration and exploitation through structured trajectory generation. 
+                It addresses the limitations of gradient guidance by exploring diverse trajectory regions and harnessing gradient information across this expanded solution space using only pretrained models and test-time reward signals.
+            </h2>
+            <div style="text-align: center;">
+                <img src="./static/images/overview_method.png" class="interpolation-image" alt="header-image." width="45%"/>
+            </div>
+            
+            <br>
+            <h2 class="subtitle">
+                <strong>(1) Parent Branching</strong>: diverse parent trajectories are produced via fixed-potential particle guidance <a href="#reference" style="color: gray;">[1]</a> to encourage broad exploration.
+                <br>
+                <br>
+                <strong>(2) Sub-Tree Expansion</strong>: sub-trajectories are locally refined through fast conditional denoising guided by task objectives.
+                <br>
+                <br>
+                <strong>TDP</strong> <img src="https://emojicdn.elk.sh/🌴"  style="height: 1em;"  /> consistently outperforms state-of-the-art zero-shot planning approaches across a wide range of guidance functions, involving <i><a href="#pnwp" style="color: red;">non-convex</a></i> objectives, <i><a href="#maze2d-gold-picking" style="color: red;">non-differentiable constraints</a></i>, and <i><a href="#multi-reward" style="color: red;">multi-reward</a></i> structures. 
+
+            <br>
+            <br>
+            <br>
+        </div>
+    </div>
+</section>
+
+<!-- <section class="section hero is-light">
+    <div class="container is-max-desktop" style="max-width: 1200px;">
+        <div class="columns is-centered">
+            <div class="column is-full-width">
+                <h2 class="title is-3 has-text-centered">Problem Setting</h2>
+                <div class="content has-text-justified">
+
+                    <div class="content has-text-justified">
+                        <p>
+                            We consider test-time reward maximization problem with the pretrained planner model where the agent has access to the user-defined guide function $\mathcal{J}(\boldsymbol{\tau})$ which indicates the fitness of the generated trajectory $\boldsymbol{\tau}$. 
+                            As per-timestep reward does not guarantee the optimality of a low-level action (e.g., non-convex reward landscope), planning capability based on exploration is required to find the optimal trajectory $\hat{\boldsymbol{\tau}}$ that maximizes $\mathcal{J}$. 
+                            The agent must find an action sequence that maximizes the guide score within a limited number of steps: 
+
+                        </p>
+                    </div>
+                   $$ 
+                   \begin{equation}
+                        \hat{\boldsymbol{\tau}} = \hat{\boldsymbol{a}}_{1:\hat{T}} = \arg\max_{T,\; \boldsymbol{a}_{1:T}} \; \mathcal{J} (\boldsymbol{s}_0, \boldsymbol{a}_{1:T}) \quad \text{subject to} \quad T_{\text{pred}} \leq T \leq T_{\text{max}}
+                    \label{problem_setting}
+                    \end{equation}
+                    $$
+                    
+                    <div class="content has-text-justified">
+                        <p>
+                            Planning horizon $T_{\text{pred}}$ is determined by the choice of planner model. 
+                            Model-free RL methods with single step execution predict a single action at each timestep so $T_{\text{pred}}=1$, whereas diffusion planner predicts a sequence of actions $\boldsymbol{a}_{1:T_{\text{pred}}}$ at once. 
+
+                        </p>
+                        <p>
+                            The standard approach to guide diffusion planning in test time is to use naive gradient guidance, which progressively refines the denoising process by combining the score estimate from the unconditional diffusion model with the auxiliary guide function. 
+                            It approximates the reverse denoising process as Gaussian with small perturbation if the guidance distribution $h(\boldsymbol{\tau}_i)$ is sufficiently smooth and the gradient of the guide function is time-independent: 
+                        </p>
+                    </div>
+
+                    $$
+                    \tilde{p}(\boldsymbol{\tau}_{i-1}|\boldsymbol{\tau}_i) \propto p_\theta(\boldsymbol{\tau}_{i-1}|\boldsymbol{\tau}_i)h(\boldsymbol{\tau}_i) \approx \mathcal{N}(\boldsymbol{\tau}_{i-1}; \mu+\alpha\Sigma g, \Sigma)
+                    $$
+
+                    <div class="content has-text-justified">
+                        <p>
+                            where $g=\nabla_\tau \log h(\boldsymbol{\tau}_i)$ is the gradient of the guidance distribution, $\alpha$ is guidance strength, and $\mu, \Sigma$ are the mean and covariance of the pretrained reverse denoising process <a href="#reference" style="color: red;">[2]</a>.
+                        </p>
+                
+                </div>
+                <br>
+
+            </div>
+        </div>
+    </div>
+</section> -->
+
+<section class="section hero is-light">
+    <div class="container is-max-desktop" style="max-width: 1200px;">
+        <div class="columns is-centered">
+            <div class="column is-full-width">
+                <h2 class="title is-3 has-text-centered">Method</h2>
+                <div class="content has-text-justified">
+
+                    <!-- <h3 class="title is-5">State Decomposition</h3> -->
+                    <!-- <p> -->
+                        <!-- In many robotic planning tasks, individual states encode multiple temporal information, yet only a subset is directly evaluated by the guide function during test-time planning.  -->
+                    <!-- We introduce a structural decomposition of the state into observation and control components, reflecting their distinct roles in task evaluation and physical execution. 
+                    We refer to the states that are directly evaluated by the guide function as <strong><i>observation</i></strong> states. On the other hand, <strong><i>control</i></strong> states are not directly scored but are critical for ensuring feasibility and smooth transitions.  -->
+                    <!-- These $\textit{control}$ states govern the underlying system dynamics and ultimately support achieving high-level objectives.  -->
+                    <!-- </p> -->
+                    <h3 class="title is-5">Parent Branching</h3>
+                    <p>
+                        <!-- In the first phase, we apply fixed-potential particle guidance (PG) <a href="#reference" style="color: red;">[1]</a> to promote diversity among generated control trajectories.  -->
+                    Unlike conventional gradient guidance methods that pull samples toward high-reward regions, PG introduces repulsive forces that push samples apart in the data space. This leads to broad coverage of dynamically feasible trajectories independent of task objectives.
+                    <!-- This leads to broad coverage across dynamically feasible trajectories without requiring a predefined task objective.  -->
+                    A single denoising step for parent branching denoted as: 
+                    </p>                    
+                    $$
+                    \left[\boldsymbol{\mu}^{i}_{\text{control}},\; \boldsymbol{\mu}^{i}_{\text{obs}}\right] \leftarrow \mathbf{SD}(\mathcal{J}, \boldsymbol{\mu}_{\theta}(\boldsymbol{\tau}^{i}))
+                    $$ 
+                    $$
+                    \boldsymbol{\mu}^{i-1}_{\text{control}} \leftarrow \boldsymbol{\mu}^{i}_{\text{control}} + \alpha_p \Sigma^i \nabla \Phi(\boldsymbol{\mu}^{i}_{\text{control}}), \quad
+                    \boldsymbol{\mu}^{i-1}_{\text{obs}} \leftarrow \boldsymbol{\mu}^{i}_{\text{obs}} + \alpha_g \Sigma^i \nabla \mathcal{J}(\boldsymbol{\mu}^{i}_{\text{obs}})
+                    $$
+                    $$
+                    \boldsymbol{\mu}^{i-1} \leftarrow \left[\boldsymbol{\mu}^{i-1}_{\text{control}},\; \boldsymbol{\mu}^{i-1}_{\text{obs}}\right]
+                    $$
+                    $$
+                    \boldsymbol{\tau}^{i-1} \sim \mathcal{N}(\boldsymbol{\mu}^{i-1}, \Sigma^i)
+                    $$
+                    where $\boldsymbol{\mu}^i_{\text{control}}$ and $\boldsymbol{\mu}^i_{\text{obs}}$ denote the <i><strong>control</strong></i> and <i><strong>observation</strong></i> components of the predicted mean of the denoising trajectory at timestep $i$, and $(\alpha_p, \alpha_g)$ are the guidance strengths for the particle guidance and gradient guidance, respectively. 
+                    $\mathbf{SD}(\mathcal{J}, \cdot)$ is the state decomposition function that autonomously partitions the state vector into <i><strong>control</strong></i> and <i><strong>observation</strong></i> components based on the test-time task $\mathcal{J}$, while $\Phi(\cdot)$ denotes the radical basis function (RBF) kernel in particle guidance.
+                    <!-- Gradient-based guidance term is optionally applied to steer the <i>observation</i> states, depending on the planning strategy. 
+                    Unconditional PG sampling facilitates broad exploration across the data space, making it effective for discovering diverse solutions, whereas conditional PG sampling focuses exploration toward regions aligned with the guide function.  -->
+
+                    <h3 class="title is-5">Sub-Tree Expansion</h3>
+                    <p>
+                        <!-- In the second phase, we apply a fast denoising process with a reduced number of steps $N_f \ll N$, where $N$ is the original number of diffusion steps, to refine parent trajectories using gradient guidance signals.  -->
+                        For each parent trajectory, a random branch site is selected, and a child trajectory is generated by denoising from a partially noised version of the parent trajectory in order to refine parent trajectories using gradient guidance signals. Sub-tree expansion proceeds as: 
+                        <!-- This process is defined as:  -->
+                    </p>
+                    $$
+                    \boldsymbol{\tau}_{\text{child}}^{N_f} \sim q_{N_f}(\boldsymbol{\tau}_{\text{parent}}, \boldsymbol{C}) \quad 
+                    \text{where} \; \boldsymbol{C}=\{ \boldsymbol{s}_k \}_{k=0}^{b} \; \text{and} \; b\sim Uniform\left(0, T_{\text{pred}}\right)
+                    $$
+                    <p>
+                        where $\boldsymbol{C}$ denotes the parent trajectory prefix, $q_{N_f}$ is the partial forward noising distribution with $N_f$ denoising steps, and $\boldsymbol{\tau}_{\text{child}}^{N_f}$ is the partially noised trajectory from which the child trajectory is denoised during sub-tree expansion. 
+                    </p>
+                    <p>
+                        The full algorithm of <strong>TDP</strong> <img src="https://emojicdn.elk.sh/🌴"  style="height: 1em;"  /> is provided in <a href="#algorithm" style="color: red;">Algorithm</a>. 
+                    </p>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<section class="section hero">
+    <div class="container is-max-desktop" style="max-width: 1200px;">
+        <div class="columns is-centered">
+            <div class="column is-full-width">
+                <h2 class="title is-3 has-text-centered" id="maze2d-gold-picking">Maze2D Gold-picking</h2>
+                <div class="content has-text-justified">
+                    <p>
+                        Maze2D gold-picking task is a planning problem with a test-time <strong><u>non-differentiable constraint</u></strong>, where the agent must generate a feasible trajectory that satisfies an initial state, a final goal state, and an intermediate goal state (the gold position <img src="./static/images/gold_coin.png" class="no-darkmode-invert" alt="gold-coin Logo" style="height: 1em; margin-left: 0.em; margin-left: 0.em">). 
+                        <!-- From the planner’s perspective, an intermediate goal is interpreted as a non-differentiable constraint, since the requirement to pass through a specific state imposes a discrete structural condition that is not captured in the training distribution.  -->
+                    </p>
+                    <div style="text-align: center;">
+                        <img src="./static/images/maze2d_gold_picking_alpha_ablation.png" class="interpolation-image"/>
+                    </div>
+                    <h5 class="subtitle has-text-centered">
+                        Two Gold-picking tasks in Maze2D-Large <a href="#reference" style="color: gray;">[3]</a>.
+                    </h5>
+                    <div class="content has-text-justified">
+                        <p>
+                            Gradient-based guidance typically requires selecting a guidance strength $\alpha$ to balance adherence to the guide signal and trajectory fidelity. 
+                            However, $\alpha$ is highly task-dependent, and exhaustive tuning across tasks introduces significant overhead during evaluation. 
+                            On the Maze2D gold-picking task, the MCSS (Monte-Carlo Sampling with Selection) baseline exhibits $\alpha$-dependent performance, whereas <strong>TDP</strong> <img src="https://emojicdn.elk.sh/🌴" style="height: 1em;" /> remains robust across varying values of the guidance strength $\alpha$. 
+                            $\alpha_0$ is guidance strength used in the main paper.
+                        </p>
+                    </div>
+
+
+                </div>
+                <br>
+
+                
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="section hero is-light">
+    <div class="container is-max-desktop" style="max-width: 1200px;">
+        <div class="columns is-centered">
+            <div class="column is-full-width">
+                <h2 class="title is-3 has-text-centered" id="pnwp">Pick-and<i>-Where-to-</i>Place ($\texttt{PnWP}$)</h2>
+                <div class="content has-text-justified">
+                    <div style="text-align: center;">
+                        <img src="./static/images/pnwp_description.png" class="interpolation-image" width="50%"/>
+                    </div>
+                <h5 class="subtitle has-text-centered">
+                    $\texttt{PnWP}$ with Kuka robot arm <a href="#reference" style="color: gray;">[4]</a>.
+                </h5>
+                    <div class="content has-text-justified">
+                        <p>
+                            We introduce a <strong><u>non-convex</u></strong> exploration task in robot arm manipulation enviornment.  
+                            The agent must infer suitable placement location based on the reward distribution and plan pick-and-place actions. 
+                            Since $x^*_{local}$ has a wide peak and $x^*_{global}$ has a narrow peak, agents easily get stuck in the local optima unless the planner sufficiently explores the trajectory space. 
+                            Mono-level guided sampling methods (<i>i.e.</i>, TAT <a href="#reference" style="color: gray;">[2]</a>, MCSS) tend to converge to local optima, often stacking all blocks at $x^*_{local}$. 
+                            <!-- While typical $\texttt{PnP}$ tasks only require fitting blocks into a given target configuration, $\texttt{PnWP}$ challenges the planner to distinguish a globally optimal arrangement from a suboptimal local one. -->
+                        </p>
+                        <!-- <p> -->
+                            <!-- however, bi-level sampling approach (i.e., <strong>TDP</strong> <img src="https://emojicdn.elk.sh/🌴"  style="height: 1em;"  />) is better able to consistently identify globally optimal placements.  -->
+                            <!-- In this task, unconditional PG in the parent branching phase enables broad exploration of the trajectory space.  -->
+                        <!-- </p> -->
+                    </div>
+                    <h4 class="title is-4" style="text-align: center;"><strong>TDP</strong> <img src="https://emojicdn.elk.sh/🌴"  style="height: 1em;"  /> is a bi-level search framework.</h4>
+                    <div class="grid-container-three-no-border">
+                        <div class="content has-text-justified">
+                            <video
+                                controls
+                                muted
+                                preload
+                                playsinline
+                                width="100%"
+                                autoplay
+                                loop>
+                                <source src="static/videos/pnwp_tat.mp4" type="video/mp4">
+                            </video>
+                            <h5 class="subtitle has-text-centered">TAT<br>(Highest-weighted trajectory)</h5>
+                        </div>
+                        
+                        <div class="content has-text-justified">
+                            <video
+                                controls
+                                muted
+                                preload
+                                playsinline
+                                width="100%"
+                                autoplay
+                                loop>
+                                <source src="static/videos/pnwp_mcss.mp4" type="video/mp4">
+                            </video>
+                            <h5 class="subtitle has-text-centered">MCSS<br>(Highest-scoring trajectory)</h5>
+                        </div>
+                        
+                        <div class="content has-text-justified">
+                            <video
+                                controls
+                                muted
+                                preload
+                                playsinline
+                                width="100%"
+                                autoplay
+                                loop>
+                                <source src="static/videos/pnwp_tdp.mp4" type="video/mp4">
+                            </video>
+                            <h5 class="subtitle has-text-centered">TDP <img src="https://emojicdn.elk.sh/🌴"  style="height: 1em;"  /></h5>
+                        </div>
+                </div>
+                <br>
+            </div>
+                
+        </div>
+    </div>
+</section>
+
+<section class="section hero">
+    <div class="container is-max-desktop" style="max-width: 1200px;">
+        <div class="columns is-centered">
+            <div class="column is-full-width">
+                <h2 class="title is-3 has-text-centered" id="multi-reward">AntMaze Multi-goal Exploration</h2>
+                <div class="content has-text-justified">
+
+                    <div style="text-align: center;">
+                        <img src="./static/images/ant_exploration_description.png" class="interpolation-image"/>
+                    </div>
+                    <h5 class="subtitle has-text-centered">
+                        Multi-goal Exploration in AntMaze-Large <a href="#reference" style="color: gray;">[3]</a>.
+                    </h5>
+                    <!-- <br> -->
+                    <div class="content has-text-justified">
+                        <p>
+                            We introduce a <strong><u>multi-reward</u></strong> exploration task in AntMaze environment. 
+                            <!-- A priority-aware multi-goal exploration is designed in AntMaze locomotion planning.  -->
+                            The diffusion planner predicts the next 64 steps (highlighted in bright on the map) using a combined Gaussian reward signal derived from multiple goals. 
+                            Goals must be visited in descending order of priority, with higher-priority goals represented by stronger and narrower Gaussian functions.
+                        </p>
+                        <p>
+                            For example, as illustrated in the figure above, the first goal the agent visits is $g_2$ at $t = t_3$. If the agent subsequently visits $g_1$, $g_4$, and $g_3$ after $t=t_3$, it successfully reaches all four goals ($g_2 \rightarrow g_1 \rightarrow g_4 \rightarrow g_3$). However, two precedence rules are violated ($g_2 \rightarrow g_1$ and $g_4 \rightarrow g_3$) while the remaining four rules ($g_2 \rightarrow g_4$, $g_2 \rightarrow g_3$, $g_1 \rightarrow g_4$, and $g_1 \rightarrow g_3$) are satisfied.
+                            In this scenario, the agent achieves a goal completion score of 4/4 but only 4/6 priority sequence match accuracy.
+                            The maximum accuracy of 6/6 is obtained only when all goals are visited in the correct prioritized order (<i>i.e.</i>, $g_1 \rightarrow g_2 \rightarrow g_3 \rightarrow g_4$).
+                        </p>
+                        <!-- <p>
+                            In this task, conditional PG in the parent branching phase plays a key role in improving both goal completion score and priority sequence match accuracy. 
+                        </p> -->
+                    </div>
+                    <h4 class="title is-4" style="text-align: center;"><strong>TDP</strong> <img src="https://emojicdn.elk.sh/🌴"  style="height: 1em;"  /> achieves more goals, with higher sequence accuracy.</h4>
+                    <div class="grid-container-three-no-border">
+                        <div class="content has-text-justified">
+                            <video
+                                controls
+                                muted
+                                preload
+                                playsinline
+                                width="100%"
+                                autoplay
+                                loop>
+                                <source src="static/videos/antmaze_mcss_1.mp4" type="video/mp4">
+                            </video>
+                            <h5 class="subtitle has-text-centered">MCSS<br>(X)</h5>
+                        </div>
+                        
+                        <div class="content has-text-justified">
+                            <video
+                                controls
+                                muted
+                                preload
+                                playsinline
+                                width="100%"
+                                autoplay
+                                loop>
+                                <source src="static/videos/antmaze_mcss_2.mp4" type="video/mp4">
+                            </video>
+                            <h5 class="subtitle has-text-centered">MCSS<br>($g_2 \rightarrow g_3 \rightarrow $ X)</h5>
+                        </div>
+                        
+                        <div class="content has-text-justified">
+                            <video
+                                controls
+                                muted
+                                preload
+                                playsinline
+                                width="100%"
+                                autoplay
+                                loop>
+                                <source src="static/videos/antmaze_tdp_1.mp4" type="video/mp4">
+                            </video>
+                            <h5 class="subtitle has-text-centered">TDP <img src="https://emojicdn.elk.sh/🌴"  style="height: 1em;"  /><br>($g_1 \rightarrow g_2 \rightarrow g_3 \rightarrow g_4$)</h5>
+                        </div>
+                    </div>
+
+                    <h4 class="title is-4" style="text-align: center;"><strong>TDP</strong> <img src="https://emojicdn.elk.sh/🌴"  style="height: 1em;"  /> completes tasks in fewer timesteps.</h4>
+                    <div class="grid-container-two-no-border-resize">
+                        <div class="column">
+                            <div class="content has-text-justified">
+                              <video id="video1" muted preload="auto" playsinline width="100%">
+                                <source src="static/videos/antmaze_mcss_3.mp4" type="video/mp4">
+                              </video>
+                              <h5 class="subtitle has-text-centered">MCSS<br>($g_1 \rightarrow g_4 \rightarrow g_3 \rightarrow g_2$, slow)</h5>
+                            </div>
+                          </div>
+                        
+                          <div class="column">
+                            <div class="content has-text-justified">
+                              <video id="video2" muted preload="auto" playsinline width="100%">
+                                <source src="static/videos/antmaze_tdp_2.mp4" type="video/mp4">
+                              </video>
+                              <h5 class="subtitle has-text-centered"><strong>TDP</strong> <img src="https://emojicdn.elk.sh/🌴" style="height: 1em;" /><br>($g_1 \rightarrow g_4 \rightarrow g_3 \rightarrow g_2$, fast)</h5>
+                            </div>
+                          </div>
+                    </div>
+                    <p>
+                        In these videos, <strong>COMPLETE</strong> indicates that the agent has visited all four goals, while <strong>SUCCESS</strong> requires visiting all four goals as well as reaching them in the correct prioritized order.
+                    </p>
+                </div>
+                <!-- <br> -->
+            </div>
+                
+        </div>
+    </div>
+</section>
+
+<section class="section hero is-light">
+    <div class="container is-max-desktop" style="max-width: 1200px;">
+        <div class="columns is-centered">
+            <div class="column is-full-width">
+                <h2 class="title is-3 has-text-centered" id="algorithm">Full Algorithm</h2>
+                <div class="content has-text-justified">
+
+                    <div style="text-align: center;">
+                        <img src="./static/images/algorithm_updated.png" class="interpolation-image" width="55%"/>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="section hero">
+    <div class="container is-max-desktop" style="max-width: 1200px;">
+        <div class="columns is-centered">
+            <div class="column is-full-width">
+                <h2 class="title is-3 has-text-centered" id="reference">Reference</h2>
+                <div class="content has-text-justified">
+
+                    <div class="content has-text-justified">
+                        <p>
+                            [1]: Gabriele Corso, Yilun Xu, Valentin De Bortoli, Regina Barzilay, and Tommi S. Jaakkola. Particle guidance: non-i.i.d. diverse sampling with diffusion models, 2024. URL https://arxiv.org/abs/2310.13102.
+                        </p>
+                        <!-- <p>
+                            [2]: Jascha Sohl-Dickstein, Eric A. Weiss, Niru Maheswaranathan, and Surya Ganguli. Deep unsupervised learning using nonequilibrium thermodynamics, 2015. URL https://arxiv.org/abs/1503.03585.
+                        </p> -->
+                        <p>
+                            [2]: Lang Feng, Pengjie Gu, Bo An, and Gang Pan. Resisting stochastic risks in diffusion planners with the trajectory aggregation tree, 2024. URL https://arxiv.org/abs/2405.17879.
+                        </p>
+                        <p>
+                            [3]: Justin Fu, Aviral Kumar, Ofir Nachum, George Tucker, and Sergey Levine. D4rl: Datasets for deep data-driven reinforcement learning, 2021. URL https://arxiv.org/abs/2004.07219.
+                        </p>
+                        <p>
+                            [4]: Caelan Reed Garrett, Tomás Lozano-Pérez, and Leslie Pack Kaelbling. Pddlstream: Integrating symbolic planners and blackbox samplers via optimistic adaptive planning, 2020. URL https://arxiv.org/abs/4181802.08705.
+                        </p>
+                    </div>
+
+
+                </div>
+                <br>
+            </div>
+                
+        </div>
+    </div>
+</section>
+
+<footer class="footer" style="background-color: #f5f5f5">
+    <div class="container">
+        <div class="columns is-centered">
+            <div class="column is-8">
+                <div class="content">
+                    <p>
+                        This website based on the <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA
+                        4.0</a> licensed
+                        <a rel="template" href="https://github.com/nerfies/nerfies.github.io">Nerfies website</a>.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<script>
+    const video1 = document.getElementById("video1");
+    const video2 = document.getElementById("video2");
+  
+    let video1Ended = false;
+    let video2Ended = false;
+  
+    function tryReplay() {
+      if (video1Ended && video2Ended) {
+        video1.currentTime = 0;
+        video2.currentTime = 0;
+        video1.play();
+        video2.play();
+        video1Ended = false;
+        video2Ended = false;
+      }
+    }
+  
+    video1.addEventListener("ended", () => {
+      video1Ended = true;
+      tryReplay();
+    });
+  
+    video2.addEventListener("ended", () => {
+      video2Ended = true;
+      tryReplay();
+    });
+  
+    // Autoplay initially
+    video1.play();
+    video2.play();
+</script>
+
+<!-- <script>
+    const pnwp_video1 = document.getElementById("pnwp_video1");
+    const pnwp_video2 = document.getElementById("pnwp_video2");
+  
+    let pnwp_video1Ended = false;
+    let pnwp_video2Ended = false;
+  
+    function tryReplay() {
+      if (pnwp_video1Ended && pnwp_video2Ended) {
+        pnwp_video1.currentTime = 0;
+        pnwp_video2.currentTime = 0;
+        pnwp_video1.play();
+        pnwp_video2.play();
+        pnwp_video1Ended = false;
+        pnwp_video2Ended = false;
+      }
+    }
+  
+    pnwp_video1.addEventListener("ended", () => {
+        pnwp_video1Ended = true;
+      tryReplay();
+    });
+  
+    pnwp_video2.addEventListener("ended", () => {
+        pnwp_video2Ended = true;
+      tryReplay();
+    });
+  
+    // Autoplay initially
+    pnwp_video1.play();
+    pnwp_video2.play();
+</script> -->
+
+</body>
+</html>
+
+
+
